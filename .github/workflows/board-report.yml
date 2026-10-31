@@ -1,0 +1,42 @@
+# Checks a board report issue and answers on it. Nothing is merged automatically: accepted rows are copied into the
+# site's data by the maintainer (weekly), so a wrong number never reaches the site without a person seeing the label.
+name: board-report
+on:
+  issues:
+    types: [opened, edited]
+permissions:
+  issues: write
+  contents: read
+jobs:
+  check:
+    if: contains(github.event.issue.labels.*.name, 'board-report')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check
+        env:
+          BODY: ${{ github.event.issue.body }}
+        run: |
+          printf '%s' "$BODY" > /tmp/issue.md
+          python scripts/check_report.py /tmp/issue.md --accepted data/board_reports.json --json > /tmp/result.json
+          python - <<'PY'
+          import json
+          r = json.load(open("/tmp/result.json"))
+          words = {"accept": "Thanks! The numbers add up and will be listed at the next weekly update.",
+                   "hold": "Thanks! A person will look at this one first:",
+                   "reject": "Sorry, this record cannot be used:"}
+          lines = [words[r["verdict"]]] + ["- " + x.split(": ", 1)[1] for x in r["reasons"]]
+          open("/tmp/comment.md", "w").write("\n".join(lines) + "\n")
+          open("/tmp/verdict", "w").write(r["verdict"])
+          PY
+      - name: Answer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          N: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$N" --repo "$GITHUB_REPOSITORY" --body-file /tmp/comment.md
+          gh issue edit "$N" --repo "$GITHUB_REPOSITORY" --remove-label accept,hold,reject >/dev/null 2>&1 || true
+          gh issue edit "$N" --repo "$GITHUB_REPOSITORY" --add-label "$(cat /tmp/verdict)"

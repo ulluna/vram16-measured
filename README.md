@@ -42,6 +42,10 @@ python scripts/pick.py --task t2i
 
 The ratio stays on your PC (`~/.vram16-measured/calibration.json`). It is only used for the same task and the same GPU. On an 8GB/12GB card it is taken against the run measured with VRAM capped to your class, so it measures compute speed, not offloading.
 
+## Share your GPU's seconds (optional)
+
+After `--calibrate`, the script prints one line you may share. It has no paths, user names or IP addresses. If you paste it into a [board report issue](https://github.com/ulluna/vram16-measured/issues/new?template=board-report.yml), a bot checks it against the measured run (it recomputes your seconds and checks the GPU name against its VRAM). Numbers that pass are listed on vram16.ullu-egg.com under the matching article, with the GPU name only. One PC cannot measure an RTX 4060 or 3060, so every report helps people with the same card.
+
 ## Install
 
 Copy this folder into your agent's skills folder (for Claude Code: `~/.claude/skills/vram16-measured/`). Python 3.9+ only; no packages needed. `run_comfy.py` needs a running ComfyUI.

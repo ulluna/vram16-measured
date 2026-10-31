@@ -1,0 +1,50 @@
+name: My GPU's seconds (board report)
+description: Share the record that `run_comfy.py --calibrate` printed, so others with the same GPU get real numbers.
+title: "[board] <GPU> / <model>"
+labels: ["board-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. This is optional and public: anyone can read this issue.
+        The record has no paths, user names or IP addresses. Please do not add any.
+        A bot checks it against the measured run (same workflow, same VRAM class). Numbers that pass are listed on
+        https://vram16.ullu-egg.com/ with the GPU name only (no GitHub name), under CC BY 4.0 like the rest of the data.
+  - type: textarea
+    id: record
+    attributes:
+      label: Record
+      description: Paste the one line after "If you want to share it". Do not edit the numbers.
+      render: json
+      placeholder: '{"model": "...", "workflow": "https://vram16.ullu-egg.com/workflows/...", "runs_s": [...], "gpu": "...", "vram_gb": ...}'
+    validations:
+      required: true
+  - type: dropdown
+    id: power
+    attributes:
+      label: Laptop or desktop?
+      description: Laptop GPUs with the same name are often much slower.
+      options:
+        - Desktop
+        - Laptop
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: ram
+    attributes:
+      label: System RAM (GB)
+      description: Optional. 8GB/12GB cards move model parts to RAM, so RAM changes the time.
+      placeholder: "32"
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything unusual?
+      description: Optional. Overclock, power limit, other apps on the GPU, a different ComfyUI launch option.
+  - type: checkboxes
+    id: ok
+    attributes:
+      label: Permission
+      options:
+        - label: I ran this on my own PC, and the numbers may be published under CC BY 4.0 with the GPU name.
+          required: true

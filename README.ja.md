@@ -41,6 +41,10 @@ python scripts/run_comfy.py --workflow https://vram16.ullu-egg.com/workflows/sd3
 
 速さの比はあなたの PC の中（`~/.vram16-measured/calibration.json`）にだけ残り、どこにも送りません。
 
+## 秒数を分けてください（任意）
+
+`--calibrate` の後に「共有してよい 1 行」が出ます。パス・ユーザー名・IP アドレスは入っていません。[この issue の型](https://github.com/ulluna/vram16-measured/issues/new?template=board-report.yml)に貼っていただくと、機械が実測と照らして確かめ（秒数を計算し直し、GPU の名前と VRAM が合うかを見ます）、通った数字を実測ノートの記事の下に GPU の名前だけで載せます。1 台の PC では RTX 4060 や 3060 の秒数は測れないので、届けの 1 件が同じ板の人の役に立ちます。
+
 ## 入れ方
 
 このフォルダを、エージェントの skill の置き場に写します（Claude Code なら `~/.claude/skills/vram16-measured/`）。Python 3.9 以上だけで、追加のパッケージは要りません。`run_comfy.py` は ComfyUI が動いている時だけ使います。
